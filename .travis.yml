@@ -1,0 +1,18 @@
+sudo: required
+services:
+  - docker
+before_install:
+  - docker build -t rahulvdalal/multi-docker-frontend-test -f ./client/Dockerfile.dev
+script:
+  - docker run -e CI=true rahulvdalal/multi-docker-frontend-test npm test
+after_success:
+  - docker build -t rahulvdalal/multi-docker-client ./client
+  - docker build -t rahulvdalal/multi-docker-nginx ./nginx
+  - docker build -t rahulvdalal/multi-docker-server ./server
+  - docker build -t rahulvdalal/multi-docker-worker ./worker
+  # Login to docker
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push rahulvdalal/multi-docker-client
+  - docker push rahulvdalal/multi-docker-nginx
+  - docker push rahulvdalal/multi-docker-server
+  - docker push rahulvdalal/multi-docker-worker
