@@ -1,0 +1,35 @@
+{
+  "AWSEBDockerrunVersion": 2,
+  "containerDefinitions": [
+    {
+      "name": "client",
+      "image": "rahulvdalal/multi-docker-client",
+      "hostname": "client",
+      "essential": false
+    },
+    {
+      "name": "server",
+      "image": "rahulvdalal/multi-docker-server",
+      "hostname": "api",
+      "essential": false
+    },
+    {
+      "name": "worker",
+      "image": "rahulvdalal/multi-docker-worker",
+      "hostname": "worker",
+      "essential": false
+    },
+    {
+      "name": "nginx",
+      "image": "rahulvdalal/multi-docker-nginx",
+      "hostname": "nginx",
+      "essential": true,
+      "links": ["server", "client"],
+      "portMappings": [{
+        "hostPort": 80,
+        "containerPort": 80
+      }]
+    }
+
+  ]
+}
